@@ -20,5 +20,11 @@
   "bugs": {
     "url": "https://github.com/Yohaido159/saga-axios/issues"
   },
-  "homepage": "https://github.com/Yohaido159/saga-axios#readme"
+  "homepage": "https://github.com/Yohaido159/saga-axios#readme",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "lodash.get": "^4.4.2",
+    "lodash.omit": "^4.5.0",
+    "redux-saga": "^1.1.3"
+  }
 }
