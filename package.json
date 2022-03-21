@@ -1,0 +1,24 @@
+{
+  "name": "saga-axios",
+  "version": "1.0.0",
+  "description": "This package is designed to simplify sending requests to the server and chaning request to request",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Yohaido159/saga-axios.git"
+  },
+  "keywords": [
+    "axios",
+    "saga",
+    "saga-redux"
+  ],
+  "author": "yohaido159",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yohaido159/saga-axios/issues"
+  },
+  "homepage": "https://github.com/Yohaido159/saga-axios#readme"
+}
