@@ -13,7 +13,7 @@ import axios from "axios";
 import omit from "lodash.omit";
 import get from "lodash.get";
 
-// import { getUserToken, removeUserToken } from "../../utils/utils";
+import { getUserToken, removeUserToken } from "../utils/utils";
 
 export function* sagaSendToProcess(action) {
   let {
@@ -34,9 +34,8 @@ export function* sagaSendToProcess(action) {
 
   let headers = {};
   if (withToken) {
-    // const token = getUserToken();
-    // headers.Authorization = `JWT ${token}`;
-    headers.Authorization = `JWT `;
+    const token = getUserToken();
+    headers.Authorization = `JWT ${token}`;
   }
 
   if (contentType === "multipart/form-data") {
@@ -68,20 +67,19 @@ export function* sagaSendToProcess(action) {
       options: { data: res, more_data: { isSuccess: true, out_state } },
     });
   } catch (err) {
-    console.log("err", err);
+    console.log(`err in send ${method}`, err);
     try {
       yield call(sagaProcessAfterSend, {
         actions,
         options: { data: err, more_data: { isSuccess: false, out_state } },
       });
     } catch (err2) {
-      console.log("err2", err2);
+      console.log("err in sagaProcessAfterSend", err2);
     }
   }
 }
 
 export function* sagaProcessAfterSend(action) {
-  console.log("action", action);
   const { actions, options = {} } = action;
   const { data, more_data } = options;
   let actionsAfterSuccess = actions.filter((action) => {
@@ -114,19 +112,19 @@ export function* processActions(action) {
   try {
     if (more_data.isSuccess === false) {
       data = get(data, "response");
-      // try {
-      //   const code = get(data, "data.code");
-      //   switch (code) {
-      //     case "user_not_found":
-      //       removeUserToken();
-      //       break;
-      //     case "token_not_valid":
-      //       removeUserToken();
-      //       break;
-      //     default:
-      //       break;
-      //   }
-      // } catch (e) {}
+      try {
+        const code = get(data, "data.code");
+        switch (code) {
+          case "user_not_found":
+            removeUserToken();
+            break;
+          case "token_not_valid":
+            removeUserToken();
+            break;
+          default:
+            break;
+        }
+      } catch (e) {}
     }
     for (let actionInList of actions) {
       const func = actionInList.func;
@@ -144,7 +142,9 @@ export function* processActions(action) {
         return withError;
       }
     }
-  } catch (err3) {}
+  } catch (err3) {
+    console.log("err in processActions", err3);
+  }
 }
 
 export function* sagaSendToSagaProcessTakeEveryStart() {
