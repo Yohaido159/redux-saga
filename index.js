@@ -1,5 +1,9 @@
-import { sagaSendToProcess } from "./global.sagas";
+import {
+  sagaSendToProcess,
+  sagaSendToSagaProcessTakeEveryStart,
+} from "./global.sagas";
 
 module.exports = {
-  sagaSendToProcess,
+  sendToProcess: sagaSendToProcess,
+  takeEverySendToProcess: sagaSendToSagaProcessTakeEveryStart,
 };
