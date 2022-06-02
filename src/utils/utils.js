@@ -15,7 +15,7 @@ export const removeUserToken = () => {
 
 export const wrapAction = (options) => {
   const {
-    on = "success",
+    on = "SUCCESS",
     payload = "data",
     func = () => {},
     actions = [],
@@ -27,4 +27,9 @@ export const wrapAction = (options) => {
     func,
     actions,
   };
+};
+
+export const isObjEmptyOrNull = (obj) => {
+  if (!obj) return true;
+  return Object.keys(obj).length === 0;
 };

@@ -23,3 +23,10 @@ export const setAddToRedux = (payload) => {
     payload,
   };
 };
+
+export const processActions = (payload) => {
+  return {
+    type: globalTypes.PROCESS_ACTIONS,
+    ...payload,
+  };
+};

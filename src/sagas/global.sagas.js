@@ -13,7 +13,11 @@ import axios from "axios";
 import omit from "lodash.omit";
 import get from "lodash.get";
 
-import { getUserToken, removeUserToken } from "../utils/utils";
+import {
+  getUserToken,
+  removeUserToken,
+  isObjEmptyOrNull,
+} from "../utils/utils";
 
 export function* sagaSendToProcess(action) {
   let {
@@ -45,6 +49,12 @@ export function* sagaSendToProcess(action) {
     }
     payload = formData;
   }
+
+  // if (withCache) {
+  //   const items = yield select((state) => get(state, `${cacheKey}`));
+  //   if (!isObjEmptyOrNull(items)) return;
+  // }
+
   const withError = yield call(processActions, { actions: actionsBefore });
   if (withError) return;
 
@@ -92,7 +102,6 @@ export function* sagaProcessAfterSend(action) {
   });
 
   if (more_data.isSuccess === true) {
-    console.log("actionsAfterSuccess", actionsAfterSuccess);
     yield call(processActions, {
       actions: actionsAfterSuccess,
       options: { data, more_data },
@@ -106,6 +115,7 @@ export function* sagaProcessAfterSend(action) {
 }
 
 export function* processActions(action) {
+  console.log("action11", action);
   const { actions = [], options = {} } = action;
   let { data = {}, more_data = {} } = options;
   let result_data = {};
@@ -126,9 +136,13 @@ export function* processActions(action) {
         }
       } catch (e) {}
     }
+    console.log("actions22", actions);
     for (let actionInList of actions) {
       const func = actionInList.func;
+      console.log("func22", func);
 
+      console.log("actionInList22", actionInList);
+      console.log("data22", data);
       if (actionInList.payload || actionInList.payload === "") {
         if (actionInList.payload === "") {
           result_data = data;
@@ -136,6 +150,7 @@ export function* processActions(action) {
           result_data = get(data, actionInList.payload);
         }
       }
+      console.log("result_data22", result_data);
       const res = yield func(result_data, more_data.out_state);
       const withError = get(res, "withError");
       if (withError) {
@@ -152,4 +167,8 @@ export function* sagaSendToSagaProcessTakeEveryStart() {
     globalTypes.SAGA_SEND_TO_SAGA_PROCESS_TAKE_EVERY,
     sagaSendToProcess
   );
+}
+
+export function* sagaProcessActionsStart() {
+  yield takeEvery(globalTypes.PROCESS_ACTIONS, processActions);
 }

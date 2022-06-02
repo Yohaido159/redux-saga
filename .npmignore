@@ -1,0 +1,6 @@
+coverage/
+src/
+.vscode/
+npm_modules/
+
+
