@@ -1,6 +1,6 @@
 {
   "name": "saga-axios",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "This package is designed to simplify sending requests to the server and chaning request to request",
   "main": "dist/index.js",
   "scripts": {
