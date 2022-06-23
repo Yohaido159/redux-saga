@@ -115,7 +115,6 @@ export function* sagaProcessAfterSend(action) {
 }
 
 export function* processActions(action) {
-  console.log("action11", action);
   const { actions = [], options = {} } = action;
   let { data = {}, more_data = {} } = options;
   let result_data = {};
@@ -136,13 +135,9 @@ export function* processActions(action) {
         }
       } catch (e) {}
     }
-    console.log("actions22", actions);
     for (let actionInList of actions) {
       const func = actionInList.func;
-      console.log("func22", func);
 
-      console.log("actionInList22", actionInList);
-      console.log("data22", data);
       if (actionInList.payload || actionInList.payload === "") {
         if (actionInList.payload === "") {
           result_data = data;
@@ -150,8 +145,8 @@ export function* processActions(action) {
           result_data = get(data, actionInList.payload);
         }
       }
-      console.log("result_data22", result_data);
-      const res = yield func(result_data, more_data.out_state);
+      const state = yield select((state) => state);
+      const res = yield func(result_data, state, more_data.out_state);
       const withError = get(res, "withError");
       if (withError) {
         return withError;
